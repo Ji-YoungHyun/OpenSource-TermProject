@@ -44,7 +44,7 @@ while True:
             #cv2.circle(frame, pt_pos, 2, (0, 255, 0), -1)
             cv2.putText(frame, str(i), pt_pos, cv2.FONT_HERSHEY_PLAIN, 0.5, (0, 255, 0))
 
-        #cv2.rectangle(frame, (face.left(), face.top()), (face.right(), face.bottom()), (0, 0, 255), 3)
+        #cv2.rectangle(frame, (face.left(), face.top()), (face.right(), face.bottom()), (0, 0, 255), 3) 얼굴범위 표시
     cv2.imshow('result', frame)
 
     key = cv2.waitKey(0)
