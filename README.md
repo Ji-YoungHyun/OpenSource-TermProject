@@ -1,4 +1,4 @@
-# OpenSource-TermProject
+# OpenSource-TermProject: 얼굴인식을 통한 부위별 관상 보기
 
 
 <역할 분배>
