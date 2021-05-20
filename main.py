@@ -45,7 +45,6 @@ while True:
             cv2.putText(frame, str(i), pt_pos, cv2.FONT_HERSHEY_PLAIN, 0.5, (0, 255, 0))
 
         #cv2.rectangle(frame, (face.left(), face.top()), (face.right(), face.bottom()), (0, 0, 255), 3)
-        #cv2.putText(frame, 'hello', (50, 50), cv2.FONT_HERSHEY_PLAIN, 2.0, (0, 255, 0))
     cv2.imshow('result', frame)
 
     key = cv2.waitKey(0)
