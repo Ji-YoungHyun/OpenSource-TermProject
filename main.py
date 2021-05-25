@@ -26,36 +26,34 @@ while True:
     img_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
     dets = detector(img_gray, 1)
-    if dets is None:
-        continue
-    
+
     for face in dets:
         face_img = frame[face.top() - 30:face.bottom() + 30, face.left() - 30:face.right() + 30]
         face_img = cv2.resize(face_img, (600, 600))
         face_gray = cv2.cvtColor(face_img, cv2.COLOR_BGR2GRAY)
         face_dets = detector(face_gray, 1)
     
-    for face in face_dets:
-        shape = predictor(face_img, face)
+        for face in face_dets:
+            shape = predictor(face_img, face)
 
-        list_points = []
+            list_points = []
 
-        for p in shape.parts():
-            list_points.append([p.x, p.y])
+            for p in shape.parts():
+                list_points.append([p.x, p.y])
 
-        list_points = np.array(list_points)
-        
-        for i, pt in enumerate(list_points[index]):
+            list_points = np.array(list_points)
+            
+            for i, pt in enumerate(list_points[index]):
 
-            pt_pos = (pt[0], pt[1])
-            cv2.putText(face_img, str(i), pt_pos, cv2.FONT_HERSHEY_PLAIN, 0.5, (0, 255, 0))
-        cv2.imshow('face', face_img)
+                pt_pos = (pt[0], pt[1])
+                cv2.putText(face_img, str(i), pt_pos, cv2.FONT_HERSHEY_PLAIN, 0.5, (0, 255, 0))
+            cv2.imshow('face', face_img)
         #cv2.rectangle(frame, (face.left(), face.top()), (face.right(), face.bottom()), (0, 0, 255), 3)
     #cv2.putText(frame, 'hello', (300, 100), cv2.FONT_HERSHEY_PLAIN, 2.0, (0, 255, 0))    
     cv2.imshow('result', frame)
     
     #cv2.imshow('face', face_img)
-    key = cv2.waitKey(0)
+    key = cv2.waitKey(1)
 
     if key == 27:
         break
