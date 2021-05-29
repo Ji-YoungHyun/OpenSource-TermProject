@@ -3,6 +3,7 @@ import cv2
 import dlib
 import imutils
 from imutils import face_utils
+import math
 
 detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
@@ -22,6 +23,61 @@ MOUTH_INNER = list(range(61, 68))
 JAWLINE = list(range(0, 17))
 
 index = ALL
+
+def eyebrow(points):
+    incli = []
+    angle = []
+    disting = 0
+    for i in LEFT_EYEBROW:
+        if i == 22: continue
+
+        incli.append(math.atan(- (points[i][1] - points[i - 1][1]) / (points[i][0] - points[i - 1][0])) / math.pi * 180)
+
+    for i in range(len(incli)):
+        if i == 0: continue
+        angle.append(180 - abs(incli[i] - incli[i - 1]))
+    
+    h = (points[22][1] + points[26][1]) / 2 - points[24][1]
+    
+    for i in angle:
+        if i > 170:
+            disting = 1
+        else:
+            disting = 0
+            break
+    if disting == 1:
+        if abs(points[26][1] - points[22][1]) < 3:
+            print('일자 눈썹')
+        elif points[26][1] > points[22][1]:
+            print('처진 눈썹')
+        else:
+            print('치켜 올라간 눈썹')
+        return
+
+    if incli[1] > incli[0]:
+        print('s자형 눈썹')
+        return
+
+    if angle[0] > 170:
+        print('아치형 눈썹')
+        return
+
+    print('둥근 눈썹')
+    return
+
+def nose(points):
+    r = (points[15][0] - points[1][0]) / 2
+    face_area = math.pi * r**2;
+    height = points[33][1] - points[28][1]
+    nose_area = (points[35][0] - points[31][0]) * (points[33][1] - points[28][1]) / 2
+    if height < 115:
+        print('짧은 코')
+    elif nose_area / face_area * 100 < 3.2:
+        print('작은 코')
+    elif height > 127:
+        print('긴 코')
+    else:
+        print('큰 코')
 
 def split_face(image, detector, predictor):
     img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -78,6 +134,8 @@ while True:
                 pt_pos = (pt[0], pt[1])
                 cv2.putText(face_img, str(i), pt_pos, cv2.FONT_HERSHEY_PLAIN, 0.5, (0, 255, 0))
             cv2.imshow('face', face_img)
+            eyebrow(list_points)
+            nose(list_points)
         # cv2.rectangle(frame, (face.left(), face.top()), (face.right(), face.bottom()), (0, 0, 255), 3)
     # cv2.putText(frame, 'hello', (300, 100), cv2.FONT_HERSHEY_PLAIN, 2.0, (0, 255, 0))
     cv2.imshow('result', frame)
