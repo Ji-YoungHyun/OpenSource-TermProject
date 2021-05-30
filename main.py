@@ -1,28 +1,30 @@
+import math
 import numpy as np
 import cv2
 import dlib
 import imutils
 from imutils import face_utils
-import math
+from math import atan2, degrees
 
 detector = dlib.get_frontal_face_detector()
-predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
+predictor = dlib.shape_predictor('C:/Users/USER/Desktop/shape_predictor_68_face_landmarks.dat')
 image = cv2.imread('C:/Users/USER/Desktop/1.jpg')
 image = imutils.resize(image, width=500)
 
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
 ALL = list(range(0, 68))
+JAWLINE = list(range(0, 17))
 RIGHT_EYEBROW = list(range(17, 22))
 LEFT_EYEBROW = list(range(22, 27))
+NOSE = list(range(27, 36))
 RIGHT_EYE = list(range(36, 42))
 LEFT_EYE = list(range(42, 48))
-NOSE = list(range(27, 36))
 MOUTH_OUTLINE = list(range(48, 61))
 MOUTH_INNER = list(range(61, 68))
-JAWLINE = list(range(0, 17))
 
 index = ALL
+
 
 def eyebrow(points):
     incli = []
@@ -36,9 +38,9 @@ def eyebrow(points):
     for i in range(len(incli)):
         if i == 0: continue
         angle.append(180 - abs(incli[i] - incli[i - 1]))
-    
+
     h = (points[22][1] + points[26][1]) / 2 - points[24][1]
-    
+
     for i in angle:
         if i > 170:
             disting = 1
@@ -65,9 +67,10 @@ def eyebrow(points):
     print('둥근 눈썹')
     return
 
+
 def nose(points):
     r = (points[15][0] - points[1][0]) / 2
-    face_area = math.pi * r**2;
+    face_area = math.pi * r ** 2;
     height = points[33][1] - points[28][1]
     nose_area = (points[35][0] - points[31][0]) * (points[33][1] - points[28][1]) / 2
     if height < 115:
@@ -79,35 +82,77 @@ def nose(points):
     else:
         print('큰 코')
 
-def split_face(image, detector, predictor):
-    img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    rects = detector(img_gray, 1)
 
-    for (i, rect) in enumerate(rects):
-        shape = predictor(img_gray, rect)
-        shape = face_utils.shape_to_np(shape)
+def angle_between(p1, p2, p3):
+    x1, y1 = p1
+    x2, y2 = p2
+    x3, y3 = p3
+    deg1 = (360 + degrees(atan2(x1 - x2, y1 - y2))) % 360
+    deg2 = (360 + degrees(atan2(x3 - x2, y3 - y2))) % 360
+    return deg2 - deg1 if deg1 <= deg2 else 360 - (deg1 - deg2)
 
-        for (name, (i, j)) in face_utils.FACIAL_LANDMARKS_IDXS.items():
-            clone = image.copy()
-            cv2.putText(clone, name, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255),2)
+def distance(x1, y1, x2, y2):
+    result = math.sqrt(math.pow(x1 - x2, 2) + math.pow(y1 - y2, 2))
+    return result
 
-            for (x, y) in shape[i:j]:
-                cv2.circle(clone, (x, y), 1, (0, 0, 255), -1)
+def mouth(points): # 각각 모양에 따른 관상 자료 확보해 놨습니다.
+    # 입꼬리 쳐졌는지 올라갔는지?
+    tail_angle = (angle_between(points[61], points[59], points[47])+angle_between(points[65], points[59], points[47])+angle_between(points[61], points[63], points[53])+angle_between(points[65], points[63], points[53]))/4
 
-            (x, y, w, h) = cv2.boundingRect(np.array([shape[i:j]]))
+    if tail_angle > 120: # 명확한 기준은 X => 둔각인 120도로 잡아봤습니다.
+        print("올라간 입꼬리")
+    else:
+        print("쳐진 입꼬리")
 
-            roi = image[y:y + h, x:x + w]
-            roi = imutils.resize(roi, width=250, inter = cv2.INTER_CUBIC)
+    # 윗입술, 아랫입술 크기 비슷한지 다른지?
+    upper_lip_length = distance(points[50][0], points[50][1], points[61][0], points[61][1])
+    lower_lip_length = distance(points[65][0], points[65][1], points[56][0], points[56][1])
 
-            cv2.imshow("ROI", roi)
-            cv2.imshow("Image", clone)
-            cv2.waitKey(0)
+    if lower_lip_length / upper_lip_length > 1.35: # 황금비율=> 윗입술:아랫입술 = 1:1.2~1.5
+                                                   # 1.2와 1.5의 사이인 1.35로 기준 잡음
+        print("윗, 아랫입술 크기 비슷")
+    else:
+        print("윗, 아랫입술 크기 다륾")
 
-    output = face_utils.visualize_facial_landmarks(image, shape)
-    cv2.imshow("Image", output)
-    cv2.waitKey(0)
+    # 입술 산이 뭉툭한지 뾰족한지?
+    lip_mountain_angle = (angle_between(points[50], points[49], points[48])+angle_between(points[50], points[51], points[52]))/2
 
-split_face(image, detector, predictor)
+    if lip_mountain_angle > 120: # 명확한 기준은 X => 둔각인 120도로 잡아봤습니다.
+        print("뾰족한 입술산")
+    else:
+        print("뭉툭한 입술산")
+
+
+# def split_face(image, detector, predictor):
+#     img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+#     rects = detector(img_gray, 1)
+#
+#     for (i, rect) in enumerate(rects):
+#         shape = predictor(img_gray, rect)
+#         shape = face_utils.shape_to_np(shape)
+#
+#         for (name, (i, j)) in face_utils.FACIAL_LANDMARKS_IDXS.items():
+#             clone = image.copy()
+#             cv2.putText(clone, name, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+#
+#             for (x, y) in shape[i:j]:
+#                 cv2.circle(clone, (x, y), 1, (0, 0, 255), -1)
+#
+#             (x, y, w, h) = cv2.boundingRect(np.array([shape[i:j]]))
+#
+#             roi = image[y:y + h, x:x + w]
+#             roi = imutils.resize(roi, width=250, inter=cv2.INTER_CUBIC)
+#
+#             cv2.imshow("ROI", roi)
+#             cv2.imshow("Image", clone)
+#             cv2.waitKey(0)
+#
+#     output = face_utils.visualize_facial_landmarks(image, shape)
+#     cv2.imshow("Image", output)
+#     cv2.waitKey(0)
+#
+#
+# split_face(image, detector, predictor)
 
 while True:
     ret, frame = cap.read()
@@ -134,8 +179,10 @@ while True:
                 pt_pos = (pt[0], pt[1])
                 cv2.putText(face_img, str(i), pt_pos, cv2.FONT_HERSHEY_PLAIN, 0.5, (0, 255, 0))
             cv2.imshow('face', face_img)
+            print("****************얼굴 부위 별 모양입니다.****************")
             eyebrow(list_points)
             nose(list_points)
+            mouth(list_points)
         # cv2.rectangle(frame, (face.left(), face.top()), (face.right(), face.bottom()), (0, 0, 255), 3)
     # cv2.putText(frame, 'hello', (300, 100), cv2.FONT_HERSHEY_PLAIN, 2.0, (0, 255, 0))
     cv2.imshow('result', frame)
