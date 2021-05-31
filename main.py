@@ -5,7 +5,7 @@ import dlib
 import imutils
 from imutils import face_utils
 from math import atan2, degrees
-
+from math import hypot
 detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor('C:/Users/USER/Desktop/shape_predictor_68_face_landmarks.dat')
 image = cv2.imread('C:/Users/USER/Desktop/1.jpg')
@@ -110,9 +110,9 @@ def mouth(points): # 각각 모양에 따른 관상 자료 확보해 놨습니�
 
     if lower_lip_length / upper_lip_length > 1.35: # 황금비율=> 윗입술:아랫입술 = 1:1.2~1.5
                                                    # 1.2와 1.5의 사이인 1.35로 기준 잡음
-        print("윗, 아랫입술 크기 비슷")
-    else:
         print("윗, 아랫입술 크기 다륾")
+    else:
+        print("윗, 아랫입술 크기 비슷")
 
     # 입술 산이 뭉툭한지 뾰족한지?
     lip_mountain_angle = (angle_between(points[50], points[49], points[48])+angle_between(points[50], points[51], points[52]))/2
@@ -121,6 +121,32 @@ def mouth(points): # 각각 모양에 따른 관상 자료 확보해 놨습니�
         print("뾰족한 입술산")
     else:
         print("뭉툭한 입술산")
+
+def midpoint(p1, p2):
+    return int((p1[0] + p2[0])/2), int((p1[1] + p2[1])/2)
+
+def eye(points):
+   left_eye_lenght= distance(points[36][0], points[36][1], points[39][0], points[39][1])
+   left_top= midpoint(points[37], points[38])
+   left_bottom=midpoint(points[41], points[40])
+   left_eye_size= hypot((left_top[0]- left_bottom[0]), (left_top[1]-left_bottom[1]))
+   right_eye_lenght =distance(points[42][0], points[42][1], points[45][0], points[45][1])
+   right_top = midpoint(points[43], points[44])
+   right_bottom = midpoint(points[47], points[46])
+   right_eye_size = hypot((right_top[0] - right_bottom[0]), (right_top[1] - right_bottom[1]))
+   between_lenght =  distance(points[39][0], points[39][1], points[42][0], points[42][1])
+   average_lenght=(left_eye_lenght+right_eye_lenght)/2
+   average_size=(left_eye_size+right_eye_size)/2
+   if average_size > average_lenght/2:
+       print("큰 눈")
+   else:
+       print("작은 눈")
+
+   if between_lenght>average_lenght*(35/30):
+        print("넓은 미간")
+   else:
+        print("좁은 미간")
+
 
 
 # def split_face(image, detector, predictor):
