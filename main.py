@@ -110,9 +110,9 @@ def mouth(points): # 각각 모양에 따른 관상 자료 확보해 놨습니�
 
     if lower_lip_length / upper_lip_length > 1.35: # 황금비율=> 윗입술:아랫입술 = 1:1.2~1.5
                                                    # 1.2와 1.5의 사이인 1.35로 기준 잡음
-        print("윗, 아랫입술 크기 비슷")
-    else:
         print("윗, 아랫입술 크기 다륾")
+    else:
+        print("윗, 아랫입술 크기 비슷")
 
     # 입술 산이 뭉툭한지 뾰족한지?
     lip_mountain_angle = (angle_between(points[50], points[49], points[48])+angle_between(points[50], points[51], points[52]))/2
