@@ -7,8 +7,8 @@ from imutils import face_utils
 from math import atan2, degrees
 from math import hypot
 detector = dlib.get_frontal_face_detector()
-predictor = dlib.shape_predictor('C:/Users/USER/Desktop/shape_predictor_68_face_landmarks.dat')
-image = cv2.imread('C:/Users/USER/Desktop/1.jpg')
+predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
+image = cv2.imread('image.jpg')
 image = imutils.resize(image, width=500)
 
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
@@ -182,11 +182,11 @@ def eye(points):
 
 while True:
     ret, frame = cap.read()
-    img_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     dets = detector(img_gray, 1)
 
     for face in dets:
-        face_img = frame[face.top() - 30:face.bottom() + 30, face.left() - 30:face.right() + 30]
+        face_img = image[face.top() - 30:face.bottom() + 30, face.left() - 30:face.right() + 30]
         face_img = cv2.resize(face_img, (600, 600))
         face_gray = cv2.cvtColor(face_img, cv2.COLOR_BGR2GRAY)
         face_dets = detector(face_gray, 1)
@@ -206,12 +206,13 @@ while True:
                 cv2.putText(face_img, str(i), pt_pos, cv2.FONT_HERSHEY_PLAIN, 0.5, (0, 255, 0))
             cv2.imshow('face', face_img)
             print("****************얼굴 부위 별 모양입니다.****************")
+            eye(list_points)
             eyebrow(list_points)
             nose(list_points)
             mouth(list_points)
         # cv2.rectangle(frame, (face.left(), face.top()), (face.right(), face.bottom()), (0, 0, 255), 3)
     # cv2.putText(frame, 'hello', (300, 100), cv2.FONT_HERSHEY_PLAIN, 2.0, (0, 255, 0))
-    cv2.imshow('result', frame)
+    cv2.imshow('result', image)
 
     # cv2.imshow('face', face_img)
     key = cv2.waitKey(1)
