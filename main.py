@@ -41,19 +41,19 @@ def eyebrow(points):
 
     h = (points[22][1] + points[26][1]) / 2 - points[24][1]
 
-    for i in angle:
-        if i > 170:
-            disting = 1
-        else:
-            disting = 0
-            break
+    
+    if angle[1] > 160:
+        disting = 1
+    else:
+        disting = 0
+
     if disting == 1:
-        if abs(points[26][1] - points[22][1]) < 3:
-            print('일자 눈썹')
-        elif points[26][1] > points[22][1]:
+        if incli[1] > 10:
+            print('치켜 올라간 눈썹')
+        elif points[26][1] > points[22][1] + 9:
             print('처진 눈썹')
         else:
-            print('치켜 올라간 눈썹')
+            print('일자 눈썹')
         return
 
     if incli[1] > incli[0]:
@@ -71,16 +71,13 @@ def eyebrow(points):
 def nose(points):
     r = (points[15][0] - points[1][0]) / 2
     face_area = math.pi * r ** 2;
-    height = points[33][1] - points[28][1]
     nose_area = (points[35][0] - points[31][0]) * (points[33][1] - points[28][1]) / 2
-    if height < 115:
-        print('짧은 코')
-    elif nose_area / face_area * 100 < 3.2:
+    if nose_area / face_area * 100 < 2.9:
         print('작은 코')
-    elif height > 127:
-        print('긴 코')
-    else:
+    elif nose_area / face_area * 100 > 3.1:
         print('큰 코')
+    else:
+        print('중간 코')
 
 
 def angle_between(p1, p2, p3):
@@ -182,11 +179,12 @@ def eye(points):
 
 while True:
     ret, frame = cap.read()
-    img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    img_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     dets = detector(img_gray, 1)
+    list_points = []
 
     for face in dets:
-        face_img = image[face.top() - 30:face.bottom() + 30, face.left() - 30:face.right() + 30]
+        face_img = frame[face.top() - 30:face.bottom() + 30, face.left() - 30:face.right() + 30]
         face_img = cv2.resize(face_img, (600, 600))
         face_gray = cv2.cvtColor(face_img, cv2.COLOR_BGR2GRAY)
         face_dets = detector(face_gray, 1)
@@ -194,7 +192,7 @@ while True:
         for face in face_dets:
             shape = predictor(face_img, face)
 
-            list_points = []
+            #list_points = []
 
             for p in shape.parts():
                 list_points.append([p.x, p.y])
@@ -210,12 +208,12 @@ while True:
             eyebrow(list_points)
             nose(list_points)
             mouth(list_points)
-        # cv2.rectangle(frame, (face.left(), face.top()), (face.right(), face.bottom()), (0, 0, 255), 3)
-    # cv2.putText(frame, 'hello', (300, 100), cv2.FONT_HERSHEY_PLAIN, 2.0, (0, 255, 0))
-    cv2.imshow('result', image)
+    cv2.imshow('result', frame)
 
-    # cv2.imshow('face', face_img)
-    key = cv2.waitKey(1)
+    if type(list_points) is list:
+        key = cv2.waitKey(1)
+    else:
+        key = cv2.waitKey(0)
 
     if key == 27:
         break
