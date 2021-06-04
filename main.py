@@ -32,7 +32,6 @@ def eyebrow(points):
     disting = 0
     for i in LEFT_EYEBROW:
         if i == 22: continue
-
         incli.append(math.atan(- (points[i][1] - points[i - 1][1]) / (points[i][0] - points[i - 1][0])) / math.pi * 180)
 
     for i in range(len(incli)):
@@ -41,7 +40,6 @@ def eyebrow(points):
 
     h = (points[22][1] + points[26][1]) / 2 - points[24][1]
 
-    
     if angle[1] > 160:
         disting = 1
     else:
@@ -78,7 +76,6 @@ def nose(points):
         print('큰 코')
     else:
         print('중간 코')
-
 
 def angle_between(p1, p2, p3):
     x1, y1 = p1
