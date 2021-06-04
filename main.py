@@ -89,12 +89,12 @@ def distance(x1, y1, x2, y2):
     result = math.sqrt(math.pow(x1 - x2, 2) + math.pow(y1 - y2, 2))
     return result
 
-def mouth(points): # 각각 모양에 따른 관상 자료 확보해 놨습니다.
+def mouth(points):
     # 입꼬리 쳐졌는지 올라갔는지?
     tail_angle = (angle_between(points[61], points[59], points[47])+angle_between(points[65], points[59], points[47])+
                   angle_between(points[61], points[63], points[53])+angle_between(points[65], points[63], points[53]))/4
 
-    if tail_angle > 120: # 명확한 기준은 X => 둔각인 120도로 잡아봤습니다.
+    if tail_angle > 120: # 기준: 둔각인 120도
         print("올라간 입꼬리")
     else:
         print("쳐진 입꼬리")
@@ -112,7 +112,7 @@ def mouth(points): # 각각 모양에 따른 관상 자료 확보해 놨습니�
     # 입술 산이 뭉툭한지 뾰족한지?
     lip_mountain_angle = (angle_between(points[50], points[49], points[48])+angle_between(points[50], points[51], points[52]))/2
 
-    if lip_mountain_angle > 120: # 명확한 기준은 X => 둔각인 120도로 잡아봤습니다.
+    if lip_mountain_angle > 120: # 기준: 둔각인 120도
         print("뾰족한 입술산")
     else:
         print("뭉툭한 입술산")
