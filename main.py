@@ -8,7 +8,7 @@ from math import atan2, degrees
 from math import hypot
 detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
-image = cv2.imread('image.jpg')
+image = cv2.imread('C7.jpg')
 image = imutils.resize(image, width=500)
 
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
