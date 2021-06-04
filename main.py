@@ -72,9 +72,10 @@ def nose(points):
     r = (points[15][0] - points[1][0]) / 2
     face_area = math.pi * r ** 2;
     nose_area = (points[35][0] - points[31][0]) * (points[33][1] - points[28][1]) / 2
-    if nose_area / face_area * 100 < 2.9:
+    print(nose_area / face_area * 100)
+    if nose_area / face_area * 100 < 3.1:
         print('작은 코')
-    elif nose_area / face_area * 100 > 3.1:
+    elif nose_area / face_area * 100 > 3.3:
         print('큰 코')
     else:
         print('중간 코')
@@ -179,12 +180,12 @@ def eye(points):
 
 while True:
     ret, frame = cap.read()
-    img_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     dets = detector(img_gray, 1)
     list_points = []
 
     for face in dets:
-        face_img = frame[face.top() - 30:face.bottom() + 30, face.left() - 30:face.right() + 30]
+        face_img = image[face.top() - 30:face.bottom() + 30, face.left() - 30:face.right() + 30]
         face_img = cv2.resize(face_img, (600, 600))
         face_gray = cv2.cvtColor(face_img, cv2.COLOR_BGR2GRAY)
         face_dets = detector(face_gray, 1)
@@ -208,7 +209,7 @@ while True:
             eyebrow(list_points)
             nose(list_points)
             mouth(list_points)
-    cv2.imshow('result', frame)
+    cv2.imshow('result', image)
 
     if type(list_points) is list:
         key = cv2.waitKey(1)
