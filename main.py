@@ -70,7 +70,7 @@ def nose(points):
     r = (points[15][0] - points[1][0]) / 2
     face_area = math.pi * r ** 2;
     nose_area = (points[35][0] - points[31][0]) * (points[33][1] - points[28][1]) / 2
-    print(nose_area / face_area * 100)
+    
     if nose_area / face_area * 100 < 3.1:
         print('작은 코')
     elif nose_area / face_area * 100 > 3.3:
