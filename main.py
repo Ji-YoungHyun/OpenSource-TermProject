@@ -132,12 +132,12 @@ def eye(points):
    between_lenght =  distance(points[39][0], points[39][1], points[42][0], points[42][1])
    average_lenght=(left_eye_lenght+right_eye_lenght)/2
    average_size=(left_eye_size+right_eye_size)/2
-   if average_size > average_lenght/2:
+   if average_size > average_lenght/3:
        print("큰 눈")
    else:
        print("작은 눈")
 
-   if between_lenght>average_lenght*(35/30):
+   if between_lenght>average_lenght*(3/2):
         print("넓은 미간")
    else:
         print("좁은 미간")
@@ -177,12 +177,12 @@ def eye(points):
 
 while True:
     ret, frame = cap.read()
-    img_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     dets = detector(img_gray, 1)
     list_points = []
 
     for face in dets:
-        face_img = frame[face.top() - 30:face.bottom() + 30, face.left() - 30:face.right() + 30]
+        face_img = image[face.top() - 30:face.bottom() + 30, face.left() - 30:face.right() + 30]
         face_img = cv2.resize(face_img, (600, 600))
         face_gray = cv2.cvtColor(face_img, cv2.COLOR_BGR2GRAY)
         face_dets = detector(face_gray, 1)
@@ -206,7 +206,7 @@ while True:
             eyebrow(list_points)
             nose(list_points)
             mouth(list_points)
-    cv2.imshow('result', frame)
+    cv2.imshow('result', image)
 
     if type(list_points) is list:
         key = cv2.waitKey(1)
