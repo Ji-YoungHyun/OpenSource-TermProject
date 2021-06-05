@@ -101,7 +101,7 @@ def mouth(points):
                   angle_between(points[61], points[63], points[53]) + angle_between(points[65], points[63],
                                                                                     points[53])) / 4
 
-    if tail_angle < 90:  # 기준: 둔각인 120도
+    if tail_angle < 90:
         print("올라간 입꼬리")
     else:
         print("쳐진 입꼬리")
