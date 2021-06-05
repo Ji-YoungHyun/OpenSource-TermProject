@@ -12,7 +12,7 @@ from collections import Counter
 import matplotlib.pyplot as plt
 
 detector = dlib.get_frontal_face_detector()
-predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
+predictor = dlib.shape_predictor('/shape_predictor_68_face_landmarks.dat')
 image = cv2.imread('image.jpg')
 image = imutils.resize(image, width=500)
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
@@ -144,10 +144,11 @@ def mouth(points):
                                                                                     points[47]) +
                   angle_between(points[61], points[63], points[53]) + angle_between(points[65], points[63],
                                                                                     points[53])) / 4
-
     if tail_angle < 90:
         print("올라간 입꼬리")
-        result_text.append('긍정적이면서 쾌활한 성격. 평소에도 미소를 띤 인상으로 대부분 대인관계가 좋은 편이다. 성실한 업무 자세로 윗사람에게 좋은 평을 듣는다.')
+        result_text.append('긍정적이면서 쾌활한 성격. 평소에도 미소를 띤 인상으로 대부분 대인관계가 좋은 편이다.')
+        result_text.append('성실한 업무 자세로 윗사람에게 좋은 평을 듣는다.')
+
     else:
         print("쳐진 입꼬리")
         result_text.append('방어적이고 겁이 많은 편. 세상에 상처받는 것을 두려워하며 적은 사람과 깊은 관계를 유지한다.')
@@ -166,7 +167,8 @@ def mouth(points):
 
     # 입술 산이 뭉툭한지 뾰족한지?
     lip_mountain_angle = (angle_between(points[50], points[49], points[48]) + angle_between(points[50], points[51],
-                                                                                            points[52])) / 2
+                                                                                      points[52])) / 2
+
     if lip_mountain_angle > 120:  # 기준: 둔각인 120도
         print("뾰족한 입술산")
         result_text.append('신경이 예민하고 솔직해 직설적인 말을 잘 뱉음. 반면 내면은 감성적이고 여려 눈물이 많다.')
@@ -215,7 +217,7 @@ while True:
     print()
     print("****************관상 결과 입니다.****************")
     print(result_text)
-    img = np.zeros((500, 1000, 3), np.uint8)
+    img = np.zeros((900, 1000, 3), np.uint8)
     b, g, r, a = 255, 255, 255, 0
     fontpath = "NanumSquare_acB.ttf"
     font = ImageFont.truetype(fontpath, 20)
@@ -236,8 +238,8 @@ while True:
             noun_adj_list.append(word)
     counts = Counter(noun_adj_list)
     tags = counts.most_common(10)
-    
-    wordcloud = WordCloud(font_path="C:/Users/USER/Desktop/NanumSquare_acB.ttf", background_color= "white", width=1000, height=1000, max_words=10, max_font_size=300).generate(str(tags))
+
+    wordcloud = WordCloud(font_path="NanumSquare_acB.ttf", background_color= "white", width=1000, height=1000, max_words=10, max_font_size=300).generate(str(tags))
     plt.figure(figsize=(10, 8))
     plt.axis('off')
     plt.imshow(wordcloud)
