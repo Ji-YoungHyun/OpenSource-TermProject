@@ -157,7 +157,7 @@ def mouth(points):
     # 입술 산이 뭉툭한지 뾰족한지?
     lip_mountain_angle = (angle_between(points[50], points[49], points[48]) + angle_between(points[50], points[51],
                                                                                             points[52])) / 2
-    if lip_mountain_angle > 90:  # 기준: 둔각인 120도
+    if lip_mountain_angle > 50:  # 기준: 둔각인 120도
         print("뾰족한 입술산")
         count["17"] = count["17"] + 1
 
@@ -185,7 +185,6 @@ for i in range(len(file_name)):
     MOUTH_INNER = list(range(61, 68))
 
     index = ALL
-
 
     ret, frame = cap.read()
     img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -239,4 +238,5 @@ for i in range(len(file_name)):
 cv2.destroyAllWindows()
 cap.release()
 
-print(count)
+dataframe = pd.DataFrame(count)
+dataframe.to_csv('C:/Users/USER/Desktop/result.csv', header=False, index=False)
