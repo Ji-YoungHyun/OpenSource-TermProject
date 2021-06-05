@@ -1,14 +1,14 @@
 import os
 
-dirname= 'C:/Users/USER/Desktop/Middle_Resolution'
+dirname= 'Middle_Resolution'
 file_name = []
 filenames = os.listdir(dirname)
 
 for filename in filenames:
     full_filename = os.path.join(dirname, filename)
-    file_name.append('C:/Users/USER/Desktop/Middle_Resolution/'+full_filename[-8:]+'/S001/L1/E01/C7.jpg')
+    file_name.append('/Middle_Resolution/'+full_filename[-8:]+'/S001/L1/E01/C7.jpg') # 조명 밝은 무표정 정면 사진만 뽑아냄
 
-print(file_name) # 조명 밝은 무표정 정면 사진만 뽑아냄
+print(file_name) 
 
 import math
 import numpy as np
@@ -19,7 +19,7 @@ from math import atan2, degrees
 from math import hypot
 import pandas as pd
 
-count = pd.read_csv('C:/Users/USER/Desktop/data.csv')
+count = pd.read_csv('data.csv')
 
 def midpoint(p1, p2):
     return int((p1[0] + p2[0]) / 2), int((p1[1] + p2[1]) / 2)
@@ -168,7 +168,7 @@ def mouth(points):
 
 for i in range(len(file_name)):
     detector = dlib.get_frontal_face_detector()
-    predictor = dlib.shape_predictor('C:/Users/USER/Desktop/shape_predictor_68_face_landmarks.dat')
+    predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
     image = cv2.imread(str(file_name[i]))
     image = imutils.resize(image, width=500)
 
@@ -239,4 +239,4 @@ cv2.destroyAllWindows()
 cap.release()
 
 dataframe = pd.DataFrame(count)
-dataframe.to_csv('C:/Users/USER/Desktop/result.csv', header=False, index=False)
+dataframe.to_csv('result.csv', header=False, index=False)
