@@ -227,21 +227,21 @@ while True:
     cv2.waitKey()
     cv2.destroyAllWindows()
 
-    # sentences_tag = []
-    # okt = Okt()
-    # sentences_tag = okt.pos(result_text)
-    # noun_adj_list = []
-    # for word, tag in sentences_tag:
-    #     if tag in ['Noun', 'Adjective']:
-    #         noun_adj_list.append(word)
-    # counts = Counter(noun_adj_list)
-    # tags = counts.most_common(10)
-    #
-    # wordcloud = WordCloud(font_path="C:/Users/USER/Desktop/NanumSquare_acB.ttf", background_color= "white", width=1000, height=1000, max_words=10, max_font_size=300).generate(str(tags))
-    # plt.figure(figsize=(10, 8))
-    # plt.axis('off')
-    # plt.imshow(wordcloud)
-    # plt.show()
+    sentences_tag = []
+    okt = Okt()
+    sentences_tag = okt.pos(result_text)
+    noun_adj_list = []
+    for word, tag in sentences_tag:
+        if tag in ['Noun', 'Adjective']:
+            noun_adj_list.append(word)
+    counts = Counter(noun_adj_list)
+    tags = counts.most_common(10)
+    
+    wordcloud = WordCloud(font_path="C:/Users/USER/Desktop/NanumSquare_acB.ttf", background_color= "white", width=1000, height=1000, max_words=10, max_font_size=300).generate(str(tags))
+    plt.figure(figsize=(10, 8))
+    plt.axis('off')
+    plt.imshow(wordcloud)
+    plt.show()
 
     if type(list_points) is list:
         key = cv2.waitKey(1)
