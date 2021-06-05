@@ -12,7 +12,7 @@ from collections import Counter
 import matplotlib.pyplot as plt
 
 detector = dlib.get_frontal_face_detector()
-predictor = dlib.shape_predictor('/shape_predictor_68_face_landmarks.dat')
+predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
 image = cv2.imread('image.jpg')
 image = imutils.resize(image, width=500)
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
