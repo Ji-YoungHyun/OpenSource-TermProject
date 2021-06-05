@@ -1,4 +1,5 @@
-# OpenSource-TermProject: 얼굴인식을 통한 부위별 관상 보기
+# OpenSource-TermProject: 얼굴인식을 통한 부위별 관상 분석 시스템
+
 
 
 <역할 분배>
