@@ -32,7 +32,7 @@ def eye(points):
     left_eye_size = hypot((left_top[0] - left_bottom[0]), (left_top[1] - left_bottom[1]))
     right_eye_lenght = distance(points[42][0], points[42][1], points[45][0], points[45][1])
     right_top = midpoint(points[43], points[44])
-    right_bottom = midpoint(points[47], points[46])
+    right_bottom = midpoint(points[47], points[46]) 
     right_eye_size = hypot((right_top[0] - right_bottom[0]), (right_top[1] - right_bottom[1]))
     between_lenght = distance(points[39][0], points[39][1], points[42][0], points[42][1])
     average_lenght = (left_eye_lenght + right_eye_lenght) / 2
